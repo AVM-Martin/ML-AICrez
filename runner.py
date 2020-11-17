@@ -21,6 +21,8 @@ def get_path_list(root_path):
         list
             List containing the names of each person
     '''
+    return os.listdir(root_path)
+
 
 def get_class_id(root_path, train_names):
     '''
@@ -40,6 +42,21 @@ def get_class_id(root_path, train_names):
         list
             List containing all image classes id
     '''
+    image_list = []
+    image_classes_list = []
+
+    for train_name in train_names:
+        train_dir = os.path.join(root_path, train_name)
+
+        for image_name in get_path_list(train_dir):
+            image_file = os.path.join(train_dir, image_name)
+            image = cv2.imread(image_file)
+
+            image_list.append(image)
+            image_classes_list.append(train_name)
+
+    return image_list, image_classes_list
+
 
 def detect_train_faces_and_filter(image_list, image_classes_list):
     '''
@@ -60,9 +77,12 @@ def detect_train_faces_and_filter(image_list, image_classes_list):
         list
             List containing all filtered image classes id
     '''
+    # TODO
+    return image_list, image_classes_list
+
 
 def detect_test_faces_and_filter(image_list):
-        '''
+    '''
         To detect a face from given image list and filter it if the face on
         the given image is less than one
 
@@ -78,6 +98,9 @@ def detect_test_faces_and_filter(image_list):
         list
             List containing all filtered faces location saved in rectangle
     '''
+    # TODO
+    return image_list, None
+
 
 def train(train_face_grays, image_classes_list):
     '''
@@ -95,6 +118,9 @@ def train(train_face_grays, image_classes_list):
         object
             Recognizer object after being trained with cropped face images
     '''
+    # TODO
+    return None
+
 
 def get_test_images_data(test_root_path):
     '''
@@ -110,7 +136,17 @@ def get_test_images_data(test_root_path):
         list
             List containing all image in the test directories
     '''
-    
+    image_list = []
+
+    for image_name in get_path_list(test_root_path):
+        image_file = os.path.join(test_root_path, image_name)
+
+        image = cv2.imread(image_file)
+        image_list.append(image)
+
+    return image_list
+
+
 def predict(recognizer, test_faces_gray):
     '''
         To predict the test image with the recognizer
@@ -127,6 +163,9 @@ def predict(recognizer, test_faces_gray):
         list
             List containing all prediction results from given test faces
     '''
+    # TODO
+    return test_faces_gray
+
 
 def draw_prediction_results(predict_results, test_image_list, test_faces_rects, train_names, size):
     '''
@@ -151,7 +190,15 @@ def draw_prediction_results(predict_results, test_image_list, test_faces_rects, 
             List containing all test images after being drawn with
             final result
     '''
-    
+    n = len(predict_results)
+
+    for idx in range(n):
+        # TODO: draw prediction
+
+        test_image_list[idx] = cv2.resize(test_image_list[idx], (size, size))
+
+    return test_image_list
+
 
 def combine_and_show_result(image_list, size):
     '''
@@ -164,6 +211,12 @@ def combine_and_show_result(image_list, size):
         size : number
             Final size of each test image
     '''
+    result = cv2.hconcat(image_list)
+
+    cv2.imshow("Result", result)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
 
 '''
 You may modify the code below if it's marked between
@@ -189,7 +242,7 @@ if __name__ == "__main__":
         Modifiable
         -------------------
     '''
-    train_root_path = "[PATH_TO_TRAIN_ROOT_DIRECTORY]"
+    train_root_path = "./dataset/train/"
     '''
         -------------------
         End of modifiable
@@ -209,7 +262,7 @@ if __name__ == "__main__":
         Modifiable
         -------------------
     '''
-    test_root_path = "[PATH_TO_TEST_ROOT_DIRECTORY]"
+    test_root_path = "./dataset/test/"
     '''
         -------------------
         End of modifiable
