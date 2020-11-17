@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+
+import os
+
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+
 def get_path_list(root_path):
     '''
         To get a list of path directories from root path
