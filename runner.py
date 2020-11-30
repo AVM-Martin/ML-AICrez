@@ -21,7 +21,7 @@ def get_path_list(root_path):
         list
             List containing the names of each person
     '''
-    return os.listdir(root_path)
+    return sorted(os.listdir(root_path))
 
 
 def get_class_id(root_path, train_names):
@@ -45,7 +45,7 @@ def get_class_id(root_path, train_names):
     image_list = []
     image_classes_list = []
 
-    for train_name in train_names:
+    for idx, train_name in enumerate(train_names):
         train_dir = os.path.join(root_path, train_name)
 
         for image_name in get_path_list(train_dir):
@@ -53,7 +53,7 @@ def get_class_id(root_path, train_names):
             image = cv2.imread(image_file)
 
             image_list.append(image)
-            image_classes_list.append(train_name)
+            image_classes_list.append(idx)
 
     return image_list, image_classes_list
 
@@ -77,8 +77,38 @@ def detect_train_faces_and_filter(image_list, image_classes_list):
         list
             List containing all filtered image classes id
     '''
-    # TODO
-    return image_list, image_classes_list
+    train_face_grays = []
+    filtered_classes_list = []
+
+    face_cascade = cv2.CascadeClassifier("assets/haarcascade_frontalface_default.xml")
+
+    for image, class_id in zip(image_list, image_classes_list):
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        faces = face_cascade.detectMultiScale(
+            image,
+            scaleFactor=1.1,
+            minNeighbors=5,
+            minSize=(100,100),
+            # flags=cv2.cv.CV_HAAR_SCALE_IMAGE,
+            flags=cv2.CASCADE_SCALE_IMAGE,
+        )
+
+        # TODO
+        if len(faces) > 0:
+            x,y,w,h = faces[0]
+
+            train_face_grays.append(image[y:y+h, x:x+w])
+            filtered_classes_list.append(class_id)
+            
+        # if len(faces) != 1:
+        #     img2 = image.copy()
+        #     for x,y,w,h in faces:
+        #         cv2.rectangle(img2, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        #     plt.imshow(img2)
+        #     plt.show()
+
+    return train_face_grays, filtered_classes_list
 
 
 def detect_test_faces_and_filter(image_list):
@@ -98,8 +128,31 @@ def detect_test_faces_and_filter(image_list):
         list
             List containing all filtered faces location saved in rectangle
     '''
-    # TODO
-    return image_list, None
+    test_faces_gray = []
+    test_faces_rects = []
+
+    face_cascade = cv2.CascadeClassifier("assets/haarcascade_frontalface_default.xml")
+
+    for image, class_id in zip(image_list, image_classes_list):
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        faces = face_cascade.detectMultiScale(
+            image,
+            scaleFactor=1.3,
+            minNeighbors=5,
+            minSize=(100,100),
+            # flags=cv2.cv.CV_HAAR_SCALE_IMAGE,
+            flags=cv2.CASCADE_SCALE_IMAGE,
+        )
+
+        # TODO
+        if len(faces) > 0:
+            x,y,w,h = faces[0]
+
+            test_faces_gray.append(image[y:y+h, x:x+w])
+            test_faces_rects.append(faces[0])
+
+    return test_faces_gray, test_faces_rects
 
 
 def train(train_face_grays, image_classes_list):
@@ -163,8 +216,13 @@ def predict(recognizer, test_faces_gray):
         list
             List containing all prediction results from given test faces
     '''
-    # TODO
-    return test_faces_gray
+    result = []
+    
+    for image in test_faces_gray:
+        # TODO
+        result.append(0)
+
+    return result
 
 
 def draw_prediction_results(predict_results, test_image_list, test_faces_rects, train_names, size):
@@ -193,9 +251,27 @@ def draw_prediction_results(predict_results, test_image_list, test_faces_rects, 
     n = len(predict_results)
 
     for idx in range(n):
-        # TODO: draw prediction
+        x,y,w,h = test_faces_rects[idx]
+
+        cv2.rectangle(
+            test_image_list[idx],
+            (x, y),
+            (x + w, y + h),
+            (255, 0, 0),
+            2,
+        )
 
         test_image_list[idx] = cv2.resize(test_image_list[idx], (size, size))
+
+        cv2.putText(
+            test_image_list[idx],
+            train_names[predict_results[idx]],
+            (15, 20),
+            cv2.FONT_HERSHEY_PLAIN,
+            1,
+            (0, 0, 255),
+            lineType=1
+        )
 
     return test_image_list
 
@@ -211,6 +287,11 @@ def combine_and_show_result(image_list, size):
         size : number
             Final size of each test image
     '''
+    n = len(predict_results)
+
+    for idx in range(n):
+        image_list[idx] = cv2.resize(test_image_list[idx], (size, size))
+
     result = cv2.hconcat(image_list)
 
     cv2.imshow("Result", result)
