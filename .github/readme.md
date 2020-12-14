@@ -27,9 +27,9 @@ AiCrez is an application to differentiate the member of a famous girl band in ko
 
   * Use python 3.7 to run this application
   * Install all python dependencies using `pip install -r requirements.txt`
-  * Run `python runner.py` to execute.
+  * Run `python runner.py` to execute
 
 
 ## Image Resources
 
-  * The dataset is obtained from Google Image.
+  * The dataset is obtained from Google Image
