@@ -156,8 +156,9 @@ def train(train_face_grays, image_classes_list):
         object
             Recognizer object after being trained with cropped face images
     '''
-    # TODO
-    return None
+    recognizer = cv2.face.LBPHFaceRecognizer_create()
+    recognizer.train(train_face_grays, np.array(image_classes_list))
+    return recognizer
 
 
 def get_test_images_data(test_root_path):
@@ -204,8 +205,8 @@ def predict(recognizer, test_faces_gray):
     result = []
     
     for image in test_faces_gray:
-        # TODO
-        result.append(0)
+        class_id, confidence = recognizer.predict(image)
+        result.append(class_id)
 
     return result
 
