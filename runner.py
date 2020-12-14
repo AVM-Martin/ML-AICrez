@@ -87,26 +87,15 @@ def detect_train_faces_and_filter(image_list, image_classes_list):
 
         faces = face_cascade.detectMultiScale(
             image,
-            scaleFactor=1.1,
+            scaleFactor=1.2,
             minNeighbors=5,
-            minSize=(100,100),
-            # flags=cv2.cv.CV_HAAR_SCALE_IMAGE,
-            flags=cv2.CASCADE_SCALE_IMAGE,
         )
 
-        # TODO
-        if len(faces) > 0:
-            x,y,w,h = faces[0]
+        for face in faces:
+            x,y,w,h = face
 
             train_face_grays.append(image[y:y+h, x:x+w])
             filtered_classes_list.append(class_id)
-            
-        # if len(faces) != 1:
-        #     img2 = image.copy()
-        #     for x,y,w,h in faces:
-        #         cv2.rectangle(img2, (x, y), (x + w, y + h), (255, 0, 0), 2)
-        #     plt.imshow(img2)
-        #     plt.show()
 
     return train_face_grays, filtered_classes_list
 
@@ -138,19 +127,15 @@ def detect_test_faces_and_filter(image_list):
 
         faces = face_cascade.detectMultiScale(
             image,
-            scaleFactor=1.3,
+            scaleFactor=1.2,
             minNeighbors=5,
-            minSize=(100,100),
-            # flags=cv2.cv.CV_HAAR_SCALE_IMAGE,
-            flags=cv2.CASCADE_SCALE_IMAGE,
         )
 
-        # TODO
-        if len(faces) > 0:
-            x,y,w,h = faces[0]
+        for face in faces:
+            x,y,w,h = face
 
             test_faces_gray.append(image[y:y+h, x:x+w])
-            test_faces_rects.append(faces[0])
+            test_faces_rects.append(face)
 
     return test_faces_gray, test_faces_rects
 
