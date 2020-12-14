@@ -1,6 +1,6 @@
 # ML-AICrez
 
-TBA
+AiCrez is an application to differentiate the member of a famous girl band in korea, Twice. AiCrez will recognize every Twice member based on profile image with single face and name the member.
 
 
 ## Contributors
@@ -23,11 +23,6 @@ TBA
 </table>
 
 
-## Creative Thinking
-
-  * *TBA*
-
-
 ## Running
 
   * Use python 3.7 to run this application
@@ -35,20 +30,6 @@ TBA
   * Run `python runner.py` to execute.
 
 
-## References
-
-Here a list of URLs that had been accessed and (maybe) give some insights to this project
-
-  * TBA
-
-
-## Useful Information
-
-(Maybe) Unrelated, but could be related in the future
-
-  * *TBA*
-
-
 ## Image Resources
 
-  * *TBA*
+  * The dataset is obtained from Google Image.
